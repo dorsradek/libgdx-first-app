@@ -3,14 +3,20 @@ package pl.dors.radek;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 
 public class MyFirstApp extends ApplicationAdapter {
+
+    private Music music;
+    private Sound sound;
 
     private OrthographicCamera camera;
 
@@ -23,6 +29,11 @@ public class MyFirstApp extends ApplicationAdapter {
 
     @Override
     public void create() {
+        music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+        music.play();
+
+        sound = Gdx.audio.newSound(Gdx.files.internal("collision.mp3"));
+
         camera = new OrthographicCamera(800, 600);
         texture = new Texture("badlogic.jpg");
         spriteBatch = new SpriteBatch();
@@ -82,7 +93,14 @@ public class MyFirstApp extends ApplicationAdapter {
             gameObject1.x += 500 * Gdx.graphics.getDeltaTime();
         }
         if (gameObject1.overlaps(gameObject2)) {
-            Gdx.app.exit();
+            sound.play();
+            System.out.println(MathUtils.random(10));
+
+            if (MathUtils.random(10) > 5) {
+                Gdx.app.exit();
+            }
+            gameObject1.x = 0;
+            gameObject1.y = 0;
         }
 
         timeHelper += Gdx.graphics.getDeltaTime();
@@ -97,5 +115,6 @@ public class MyFirstApp extends ApplicationAdapter {
         spriteBatch.dispose();
         texture.dispose();
         bitmapFont.dispose();
+        music.dispose();
     }
 }
